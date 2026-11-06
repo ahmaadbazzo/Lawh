@@ -136,6 +136,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                       children: [
                         QuranPageView(
                             pageController: _pageController,
+                            highlights: const <HighlightVerse>[],
                             isDarkMode: isDark,
                             isTajweed: false,
                             enableTwoPageLayout: false,

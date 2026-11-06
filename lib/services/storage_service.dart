@@ -25,18 +25,26 @@ class StorageService {
   late SharedPreferences _prefs;
   String _dailyCountDateCache = '';
   int _dailyCountCache = 0;
+  int _totalTestedCache = 0;
+  int _totalCorrectCache = 0;
+  int _streakCache = 0;
+  String _lastDateCache = '';
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
     _dailyCountDateCache = _prefs.getString(_keyDailyCountDate) ?? '';
     _dailyCountCache = _prefs.getInt(_keyDailyCount) ?? 0;
+    _totalTestedCache = _prefs.getInt(_keyTotalTested) ?? 0;
+    _totalCorrectCache = _prefs.getInt(_keyTotalCorrect) ?? 0;
+    _streakCache = _prefs.getInt(_keyStreak) ?? 0;
+    _lastDateCache = _prefs.getString(_keyLastDate) ?? '';
   }
 
   // --- Statistics ---
-  int getTotalTested() => _prefs.getInt(_keyTotalTested) ?? 0;
-  int getTotalCorrect() => _prefs.getInt(_keyTotalCorrect) ?? 0;
-  int getStreak() => _prefs.getInt(_keyStreak) ?? 0;
-  String getLastDate() => _prefs.getString(_keyLastDate) ?? '';
+  int getTotalTested() => _totalTestedCache;
+  int getTotalCorrect() => _totalCorrectCache;
+  int getStreak() => _streakCache;
+  String getLastDate() => _lastDateCache;
 
   int getDailyGoal() => _prefs.getInt(_keyDailyGoal) ?? 10;
 
@@ -55,8 +63,10 @@ class StorageService {
   Future<void> recordAnswer({required bool isCorrect}) async {
     // Update all in-memory counters before the first await. Several answers
     // can be recorded quickly in free-recall mode; this prevents lost counts.
-    final tested = getTotalTested() + 1;
-    final correct = getTotalCorrect() + (isCorrect ? 1 : 0);
+    _totalTestedCache++;
+    if (isCorrect) _totalCorrectCache++;
+    final tested = _totalTestedCache;
+    final correct = _totalCorrectCache;
     final now = DateTime.now();
     final todayStr = now.year.toString() + '-' +
         now.month.toString().padLeft(2, '0') + '-' +
@@ -76,10 +86,12 @@ class StorageService {
     ];
 
     // Update streak using calendar dates (not elapsed 24-hour periods).
-    final lastDateStr = getLastDate();
+    final lastDateStr = _lastDateCache;
     if (lastDateStr.isEmpty) {
-      writes.add(_prefs.setInt(_keyStreak, 1));
-      writes.add(_prefs.setString(_keyLastDate, todayStr));
+      _streakCache = 1;
+      _lastDateCache = todayStr;
+      writes.add(_prefs.setInt(_keyStreak, _streakCache));
+      writes.add(_prefs.setString(_keyLastDate, _lastDateCache));
     } else if (lastDateStr != todayStr) {
       final lastDate = DateTime.tryParse(lastDateStr);
       final previousDay = lastDate == null
@@ -91,11 +103,14 @@ class StorageService {
           : today.difference(previousDay).inDays;
 
       if (diffDays == 1) {
-        writes.add(_prefs.setInt(_keyStreak, getStreak() + 1));
+        _streakCache++;
+        writes.add(_prefs.setInt(_keyStreak, _streakCache));
       } else if (diffDays > 1 || previousDay == null) {
-        writes.add(_prefs.setInt(_keyStreak, 1));
+        _streakCache = 1;
+        writes.add(_prefs.setInt(_keyStreak, _streakCache));
       }
-      writes.add(_prefs.setString(_keyLastDate, todayStr));
+      _lastDateCache = todayStr;
+      writes.add(_prefs.setString(_keyLastDate, _lastDateCache));
     }
 
     await Future.wait(writes);
@@ -211,6 +226,12 @@ class StorageService {
   }
 
   Future<void> resetAllStats() async {
+    _totalTestedCache = 0;
+    _totalCorrectCache = 0;
+    _streakCache = 0;
+    _lastDateCache = '';
+    _dailyCountCache = 0;
+    _dailyCountDateCache = '';
     await _prefs.remove(_keyTotalTested);
     await _prefs.remove(_keyTotalCorrect);
     await _prefs.remove(_keyStreak);

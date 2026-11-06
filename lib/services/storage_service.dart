@@ -16,6 +16,7 @@ class StorageService {
   static const String _keyFontSize = 'lawh_font_size';
   static const String _keyMistakes = 'lawh_mistakes_list';
   static const String _keyWritingDraftPrefix = 'lawh_writing_page_';
+  static const String _keyLastWritingPage = 'lawh_last_writing_page';
 
   late SharedPreferences _prefs;
 
@@ -83,6 +84,12 @@ class StorageService {
   }
 
   // --- Mushaf writing drafts ---
+  int getLastWritingPage() => _prefs.getInt(_keyLastWritingPage) ?? 1;
+
+  Future<void> saveLastWritingPage(int page) async {
+    await _prefs.setInt(_keyLastWritingPage, page.clamp(1, 604));
+  }
+
   String getWritingDraft(int page) =>
       _prefs.getString('$_keyWritingDraftPrefix$page') ?? '';
 

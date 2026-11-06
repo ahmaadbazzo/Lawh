@@ -34,9 +34,7 @@ GROOVY_SIGNING = """    signingConfigs {
 
 """
 
-KOTLIN_PROPS = """import java.util.Properties
-
-val keystoreProperties = Properties()
+KOTLIN_PROPS = """val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("key.properties")
 if (keystorePropertiesFile.exists()) {
     keystorePropertiesFile.inputStream().use { keystoreProperties.load(it) }

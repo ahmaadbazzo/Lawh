@@ -187,12 +187,12 @@ class _TestScreenState extends State<TestScreen> {
 
     final targetWords = currentAyah.text
         .trim()
-        .split(RegExp(r'\\s+'))
+        .split(RegExp(r'\s+'))
         .where((word) => word.isNotEmpty)
         .toList();
     final typedWords = test.userInput.trim().isEmpty
         ? <String>[]
-        : test.userInput.trimRight().split(RegExp(r'\\s+'));
+        : test.userInput.trimRight().split(RegExp(r'\s+'));
     final wordHighlights = <WordHighlight>[];
     for (var i = 0; i < typedWords.length && i < targetWords.length; i++) {
       final typed = TextNormalizer.normalize(typedWords[i]);

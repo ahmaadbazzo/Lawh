@@ -125,8 +125,7 @@ class _TestScreenState extends State<TestScreen> {
       });
     }
 
-    return SizedBox(
-      height: 430,
+    return SizedBox.expand(
       child: ClipRRect(
         borderRadius: BorderRadius.circular(14),
         child: DecoratedBox(

@@ -1,0 +1,44 @@
+name: Gemini Code Assistant
+
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What should Gemini inspect or help with?"
+        required: true
+        type: string
+        default: "راجع المشروع وابحث عن الأخطاء والمشاكل المحتملة، وقدّم تقريراً واضحاً دون تعديل الملفات."
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gemini-assistant-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gemini:
+    name: Ask Gemini CLI
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Run Gemini CLI
+        id: gemini
+        uses: google-github-actions/run-gemini-cli@f77273f4c914e4bf38440cf36a0369cb64a37489 # v0.1.22
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          gemini_cli_version: latest
+          upload_artifacts: true
+          prompt: |
+            You are reviewing the Flutter repository "Lawh" (لَوح).
+            Follow the repository instructions in GEMINI.md.
+            User task:
+            ${{ inputs.task }}
+
+            Start by inspecting the relevant source and tests. Be precise about file paths and line numbers.
+            Do not commit, push, deploy, change repository settings, access secrets, or request credentials.
+            Unless the user explicitly asks for code changes, provide a diagnosis and a safe proposed patch only.
+            The workflow token is read-only; do not try to bypass that restriction.

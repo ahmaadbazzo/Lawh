@@ -1,5 +1,9 @@
 name: Build Lawh
 
+concurrency:
+  group: lawh-main-build
+  cancel-in-progress: true
+
 on:
   push:
     branches: [ main, master ]

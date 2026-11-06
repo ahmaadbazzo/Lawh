@@ -23,9 +23,13 @@ class StorageService {
   static const String _keyDailyCount = 'lawh_daily_count';
 
   late SharedPreferences _prefs;
+  String _dailyCountDateCache = '';
+  int _dailyCountCache = 0;
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
+    _dailyCountDateCache = _prefs.getString(_keyDailyCountDate) ?? '';
+    _dailyCountCache = _prefs.getInt(_keyDailyCount) ?? 0;
   }
 
   // --- Statistics ---
@@ -42,45 +46,59 @@ class StorageService {
 
   int getDailyCompleted() {
     final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final saved = DateTime.tryParse(_prefs.getString(_keyDailyCountDate) ?? '');
-    if (saved == null || saved.year != today.year || saved.month != today.month || saved.day != today.day) return 0;
-    return _prefs.getInt(_keyDailyCount) ?? 0;
+    final todayKey = now.year.toString() + '-' +
+        now.month.toString().padLeft(2, '0') + '-' +
+        now.day.toString().padLeft(2, '0');
+    return _dailyCountDateCache == todayKey ? _dailyCountCache : 0;
   }
 
   Future<void> recordAnswer({required bool isCorrect}) async {
+    // Update all in-memory counters before the first await. Several answers
+    // can be recorded quickly in free-recall mode; this prevents lost counts.
     final tested = getTotalTested() + 1;
     final correct = getTotalCorrect() + (isCorrect ? 1 : 0);
-    await _prefs.setInt(_keyTotalTested, tested);
-    await _prefs.setInt(_keyTotalCorrect, correct);
     final now = DateTime.now();
-    final todayKey = now.year.toString() + '-' + now.month.toString().padLeft(2, '0') + '-' + now.day.toString().padLeft(2, '0');
-    final todayCount = _prefs.getString(_keyDailyCountDate) == todayKey ? (_prefs.getInt(_keyDailyCount) ?? 0) + 1 : 1;
-    await _prefs.setString(_keyDailyCountDate, todayKey);
-    await _prefs.setInt(_keyDailyCount, todayCount);
+    final todayStr = now.year.toString() + '-' +
+        now.month.toString().padLeft(2, '0') + '-' +
+        now.day.toString().padLeft(2, '0');
 
-    // Update streak based on calendar day
-    final now = DateTime.now();
-    final todayStr = '${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}';
+    if (_dailyCountDateCache != todayStr) {
+      _dailyCountDateCache = todayStr;
+      _dailyCountCache = 0;
+    }
+    _dailyCountCache++;
+
+    final writes = <Future<bool>>[
+      _prefs.setInt(_keyTotalTested, tested),
+      _prefs.setInt(_keyTotalCorrect, correct),
+      _prefs.setString(_keyDailyCountDate, _dailyCountDateCache),
+      _prefs.setInt(_keyDailyCount, _dailyCountCache),
+    ];
+
+    // Update streak using calendar dates (not elapsed 24-hour periods).
     final lastDateStr = getLastDate();
-
     if (lastDateStr.isEmpty) {
-      await _prefs.setInt(_keyStreak, 1);
-      await _prefs.setString(_keyLastDate, todayStr);
+      writes.add(_prefs.setInt(_keyStreak, 1));
+      writes.add(_prefs.setString(_keyLastDate, todayStr));
     } else if (lastDateStr != todayStr) {
       final lastDate = DateTime.tryParse(lastDateStr);
-      if (lastDate != null) {
-        final today = DateTime(now.year, now.month, now.day);
-        final previousDay = DateTime(lastDate.year, lastDate.month, lastDate.day);
-        final diffDays = today.difference(previousDay).inDays;
-        if (diffDays == 1) {
-          await _prefs.setInt(_keyStreak, getStreak() + 1);
-        } else if (diffDays > 1) {
-          await _prefs.setInt(_keyStreak, 1);
-        }
+      final previousDay = lastDate == null
+          ? null
+          : DateTime(lastDate.year, lastDate.month, lastDate.day);
+      final today = DateTime(now.year, now.month, now.day);
+      final diffDays = previousDay == null
+          ? 0
+          : today.difference(previousDay).inDays;
+
+      if (diffDays == 1) {
+        writes.add(_prefs.setInt(_keyStreak, getStreak() + 1));
+      } else if (diffDays > 1 || previousDay == null) {
+        writes.add(_prefs.setInt(_keyStreak, 1));
       }
-      await _prefs.setString(_keyLastDate, todayStr);
+      writes.add(_prefs.setString(_keyLastDate, todayStr));
     }
+
+    await Future.wait(writes);
   }
 
   // --- Progress State ---

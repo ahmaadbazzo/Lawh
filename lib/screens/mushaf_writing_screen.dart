@@ -20,6 +20,7 @@ class MushafWritingScreen extends StatefulWidget {
 
 class _MushafWritingScreenState extends State<MushafWritingScreen> {
   late final PageController _pageController;
+  int? _lastMushafPage;
   final TextEditingController _writingController = TextEditingController();
   final FocusNode _writingFocus = FocusNode();
   late int _page;
@@ -33,7 +34,9 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
   void initState() {
     super.initState();
     _page = widget.initialPage.clamp(1, 604).toInt();
-    _pageController = PageController(initialPage: _page - 1);
+    // Start at page zero; QuranPageView must attach before we jump to the
+    // requested Mushaf page (same lifecycle used by the working test screen).
+    _pageController = PageController(initialPage: 0);
     _preparePage();
   }
 
@@ -99,7 +102,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
       _writingController.clear();
       _loading = true;
     });
-    _pageController.jumpToPage(next - 1);
+    _lastMushafPage = null;
     _preparePage();
   }
 
@@ -121,6 +124,21 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // QuranPageView may attach its internal PageView after this State's first
+    // build. Jump only after that attachment, otherwise some package versions
+    // render a blank page when given a non-zero initialPage.
+    if (_lastMushafPage != _page) {
+      _lastMushafPage = _page;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _pageController.hasClients) {
+          _pageController.jumpToPage(_page - 1);
+          debugPrint('LAW H writing Mushaf page positioned: $_page');
+        } else {
+          debugPrint('LAW H writing Mushaf controller not attached for page $_page');
+        }
+      });
+    }
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final paper = isDark ? const Color(0xFF1D2924) : const Color(0xFFFFFDF7);
 

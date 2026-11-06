@@ -37,14 +37,15 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
         _loadFailed = false;
       });
     }
+    final requestedPage = _page;
     try {
-      await MushafLoader.ensureReady(_page);
-      if (!mounted) return;
+      await MushafLoader.ensureReady(requestedPage);
+      if (!mounted || requestedPage != _page) return;
       setState(() => _loading = false);
     } catch (error, stackTrace) {
       debugPrint('LAW H writing page load failed: $error');
       debugPrintStack(stackTrace: stackTrace);
-      if (!mounted) return;
+      if (!mounted || requestedPage != _page) return;
       setState(() {
         _loading = false;
         _loadFailed = true;
@@ -133,8 +134,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        if (!_loading && !_loadFailed)
-                          QuranPageView(
+                        QuranPageView(
                             pageController: _pageController,
                             isDarkMode: isDark,
                             isTajweed: false,

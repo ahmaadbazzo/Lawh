@@ -87,6 +87,7 @@ def patch_kotlin():
     if "keystoreProperties" in text:
         print("Kotlin release signing already configured")
         return
+    text = "import java.util.Properties\\n\\n" + text
     text = insert_before(r"^android\s*\{", KOTLIN_PROPS, text, "Could not find android { block in build.gradle.kts")
     text = insert_before(r"^\s*buildTypes\s*\{", KOTLIN_SIGNING, text, "Could not find buildTypes { block in build.gradle.kts")
     patterns = [

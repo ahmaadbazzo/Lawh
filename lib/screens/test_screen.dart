@@ -601,13 +601,13 @@ class _GhostTextController extends TextEditingController {
     final typed = text;
     final targetDisplayWords = targetText.trim().isEmpty
         ? <String>[]
-        : targetText.trim().split(RegExp(r'\\s+'));
+        : targetText.trim().split(RegExp(r'\s+'));
     final targetWords = targetDisplayWords
         .map(TextNormalizer.normalize)
         .toList();
     final typedWords = typed.trim().isEmpty
         ? <String>[]
-        : typed.trimRight().split(RegExp(r'\\s+'));
+        : typed.trimRight().split(RegExp(r'\s+'));
     final spans = <InlineSpan>[];
 
     for (var i = 0; i < typedWords.length; i++) {

@@ -16,7 +16,11 @@ class MushafLoader {
   }
 
   static Future<void> _initialize() async {
-    await QcfFontLoader.setupFontsAtStartup();
+    await QcfFontLoader.setupFontsAtStartup(
+      onProgress: (progress) {
+        debugPrint('QCF font loading: ${(progress * 100).toStringAsFixed(1)}%');
+      },
+    );
     await QuranRepository.instance.ensureLoaded(604);
   }
 }

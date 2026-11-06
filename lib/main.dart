@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 
 import 'constants/app_theme.dart';
 import 'providers/progress_provider.dart';
@@ -19,6 +20,14 @@ void main() async {
 
   final quranService = QuranService();
   await quranService.init();
+
+  // QuranPageView needs the page-specific QCF fonts ready before it is shown.
+  try {
+    await QcfFontLoader.setupFontsAtStartup();
+  } catch (error, stackTrace) {
+    debugPrint('QCF font initialization failed: $error');
+    debugPrintStack(stackTrace: stackTrace);
+  }
 
   runApp(
     MultiProvider(

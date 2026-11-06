@@ -363,7 +363,6 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                               enableSuggestions: false,
                               onChanged: (value) {
                                 _scheduleSave(value);
-                                _writingController.notifyListeners();
                               },
                               cursorColor: AppColors.accentGold,
                               style: TextStyle(

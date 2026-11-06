@@ -599,8 +599,12 @@ class _GhostTextController extends TextEditingController {
   }) {
     final base = style ?? const TextStyle();
     final typed = text;
-    final targetWords = TextNormalizer.normalize(targetText).split(' ')
-      ..removeWhere((word) => word.isEmpty);
+    final targetDisplayWords = targetText.trim().isEmpty
+        ? <String>[]
+        : targetText.trim().split(RegExp(r'\\s+'));
+    final targetWords = targetDisplayWords
+        .map(TextNormalizer.normalize)
+        .toList();
     final typedWords = typed.trim().isEmpty
         ? <String>[]
         : typed.trimRight().split(RegExp(r'\\s+'));
@@ -628,7 +632,7 @@ class _GhostTextController extends TextEditingController {
 
     final completedCount = typedWords.length;
     final remaining = completedCount < targetWords.length
-        ? targetWords.sublist(completedCount).join(' ')
+        ? targetDisplayWords.sublist(completedCount).join(' ')
         : '';
     if (remaining.isNotEmpty) {
       if (typedWords.isNotEmpty && !typed.endsWith(' ')) {

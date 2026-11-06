@@ -51,6 +51,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
       final storage = context.read<StorageService>();
       await storage.saveLastWritingPage(requestedPage);
       final draft = storage.getWritingDraft(requestedPage);
+      final savedOpacity = storage.getWritingOpacity();
       _writingController.value = TextEditingValue(
         text: draft,
         selection: TextSelection.collapsed(offset: draft.length),
@@ -58,6 +59,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
       setState(() {
         _loading = false;
         _saved = true;
+        _verseOpacity = savedOpacity;
       });
     } catch (error, stackTrace) {
       debugPrint('LAW H writing page load failed: $error');
@@ -179,7 +181,10 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                           max: 0.75,
                           divisions: 13,
                           activeColor: AppColors.accentGold,
-                          onChanged: (value) => setState(() => _verseOpacity = value),
+                          onChanged: (value) {
+                            setState(() => _verseOpacity = value);
+                            context.read<StorageService>().saveWritingOpacity(value);
+                          },
                         ),
                       ),
                       Text(

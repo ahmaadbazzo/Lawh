@@ -359,36 +359,6 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
-  Widget _buildHintCard(BuildContext context, String text, bool isDark) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.softGold.withOpacity(isDark ? 0.15 : 0.4),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.accentGold.withOpacity(0.5)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Icon(Icons.lightbulb_rounded, color: AppColors.accentAmber, size: 22),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontFamily: 'QuranHafs',
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: AppColors.primaryGreenDark,
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildResultFeedback(
     BuildContext context,
     TestResult result,

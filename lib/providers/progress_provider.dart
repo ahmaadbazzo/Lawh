@@ -20,7 +20,7 @@ class ProgressProvider extends ChangeNotifier {
   int get streak => _streak;
   int get dailyGoal => _storage.getDailyGoal();
   int get dailyCompleted => _storage.getDailyCompleted();
-  double get dailyProgress => (dailyCompleted / dailyGoal).clamp(0.0, 1.0);
+  double get dailyProgress => (dailyCompleted / dailyGoal).clamp(0.0, 1.0).toDouble();
   List<int> get completedSurahs => _completedSurahs;
   List<MistakeItem> get mistakes => _mistakes;
 

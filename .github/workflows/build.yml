@@ -34,6 +34,9 @@ jobs:
       - name: Build the complete Quran data (6,236 verses)
         run: python3 scripts/build_quran_data.py
 
+      - name: Build Madinah Mushaf pages (604 pages)
+        run: python3 scripts/build_mushaf_pages.py
+
       - name: Download Amiri Quran font
         run: python3 scripts/fetch_fonts.py
 

@@ -15,6 +15,7 @@ class StorageService {
   static const String _keyHintLevel = 'lawh_hint_level';
   static const String _keyFontSize = 'lawh_font_size';
   static const String _keyMistakes = 'lawh_mistakes_list';
+  static const String _keyWritingDraftPrefix = 'lawh_writing_page_';
 
   late SharedPreferences _prefs;
 
@@ -79,6 +80,14 @@ class StorageService {
   Future<void> saveLastPosition(int surahId, int ayahNum) async {
     await _prefs.setInt(_keyLastSurah, surahId);
     await _prefs.setInt(_keyLastAyah, ayahNum);
+  }
+
+  // --- Mushaf writing drafts ---
+  String getWritingDraft(int page) =>
+      _prefs.getString('$_keyWritingDraftPrefix$page') ?? '';
+
+  Future<void> saveWritingDraft(int page, String text) async {
+    await _prefs.setString('$_keyWritingDraftPrefix$page', text);
   }
 
   // --- Settings ---

@@ -18,6 +18,9 @@ class ProgressProvider extends ChangeNotifier {
   int get totalTested => _totalTested;
   int get totalCorrect => _totalCorrect;
   int get streak => _streak;
+  int get dailyGoal => _storage.getDailyGoal();
+  int get dailyCompleted => _storage.getDailyCompleted();
+  double get dailyProgress => (dailyCompleted / dailyGoal).clamp(0.0, 1.0);
   List<int> get completedSurahs => _completedSurahs;
   List<MistakeItem> get mistakes => _mistakes;
 
@@ -30,6 +33,11 @@ class ProgressProvider extends ChangeNotifier {
     _streak = _storage.getStreak();
     _completedSurahs = _storage.getCompletedSurahs();
     _mistakes = _storage.getMistakes();
+    notifyListeners();
+  }
+
+  Future<void> setDailyGoal(int value) async {
+    await _storage.setDailyGoal(value);
     notifyListeners();
   }
 

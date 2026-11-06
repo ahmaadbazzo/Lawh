@@ -1,7 +1,7 @@
 name: lawh
 description: "لَوح - تطبيق اختبار حفظ القرآن الكريم كتابةً من الذاكرة"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.1.0+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -36,11 +36,9 @@ flutter:
     - assets/icon/
 
   fonts:
-    # Quran text, surah titles, ornamental headings
     - family: QuranHafs
       fonts:
         - asset: assets/fonts/AmiriQuran-Regular.ttf
-    # General UI text
     - family: UiNaskh
       fonts:
         - asset: assets/fonts/NotoNaskhArabic-Regular.ttf

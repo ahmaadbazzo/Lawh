@@ -60,6 +60,8 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 18),
               const _ContinueCard(),
               const SizedBox(height: 12),
+              _DailyGoalCard(progress: progress),
+              const SizedBox(height: 12),
               const _ContinueWritingCard(),
               const SizedBox(height: 26),
               const OrnateTitle('إحصائيات الحفظ'),
@@ -595,6 +597,111 @@ class _MistakesBanner extends StatelessWidget {
             const Icon(Icons.arrow_back_ios_new_rounded, size: 15, color: AppColors.accentGold),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class _DailyGoalCard extends StatelessWidget {
+  const _DailyGoalCard({required this.progress});
+
+  final ProgressProvider progress;
+
+  Future<void> _editGoal(BuildContext context) async {
+    final controller = TextEditingController(text: progress.dailyGoal.toString());
+    final value = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('الهدف اليومي'),
+        content: TextField(
+          controller: controller,
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          decoration: const InputDecoration(
+            labelText: 'عدد الآيات في اليوم',
+            helperText: 'من ١ إلى ٥٠٠ آية',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('إلغاء'),
+          ),
+          FilledButton(
+            onPressed: () {
+              final parsed = int.tryParse(controller.text.trim());
+              if (parsed != null && parsed >= 1 && parsed <= 500) {
+                Navigator.pop(dialogContext, parsed);
+              }
+            },
+            child: const Text('حفظ'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    if (value != null) await progress.setDailyGoal(value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final done = progress.dailyCompleted;
+    final goal = progress.dailyGoal;
+    final ratio = progress.dailyProgress;
+
+    return OrnateFrame(
+      radius: 18,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 62,
+            height: 62,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox.expand(
+                  child: CircularProgressIndicator(
+                    value: ratio,
+                    strokeWidth: 6,
+                    backgroundColor: AppColors.accentGold.withOpacity(0.18),
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.accentGold),
+                  ),
+                ),
+                Text(
+                  (ratio * 100).round().toString() + '٪',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('هدف اليوم', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const SizedBox(height: 3),
+                Text(
+                  toArabicDigits(done) + ' من ' + toArabicDigits(goal) + ' آية',
+                  style: TextStyle(color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  ratio >= 1 ? 'أتممت هدفك اليوم، بارك الله فيك' : 'كل آية تقرّبك من هدفك',
+                  style: const TextStyle(fontSize: 12, color: AppColors.accentGold),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            tooltip: 'تعديل الهدف',
+            onPressed: () => _editGoal(context),
+            icon: const Icon(Icons.tune_rounded, color: AppColors.accentGold),
+          ),
+        ],
       ),
     );
   }

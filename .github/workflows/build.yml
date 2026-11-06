@@ -48,7 +48,6 @@ jobs:
         run: |
           rm -rf android
           flutter create . --platforms=android --org "$APP_ORG" --project-name lawh
-          rm -f test/widget_test.dart
 
       - name: Prepare release signing (only if secrets are set)
         env:
@@ -79,11 +78,13 @@ jobs:
       - name: Patch qcf_quran_plus runtime type inference
         run: python3 scripts/patch_qcf_runtime_types.py
 
+      - name: Analyze Dart and Flutter sources
+        run: flutter analyze
+
       - name: Generate launcher icons
         run: dart run flutter_launcher_icons
 
-      - name: Unit tests (non-blocking)
-        continue-on-error: true
+      - name: Unit tests
         run: flutter test
 
       - name: Build APK

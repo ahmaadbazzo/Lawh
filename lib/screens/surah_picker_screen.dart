@@ -7,6 +7,7 @@ import '../models/surah.dart';
 import '../models/test_session.dart';
 import '../providers/test_provider.dart';
 import '../services/quran_service.dart';
+import '../services/text_normalizer.dart';
 import 'test_screen.dart';
 
 class SurahPickerScreen extends StatefulWidget {
@@ -38,10 +39,12 @@ class _SurahPickerScreenState extends State<SurahPickerScreen> {
 
       // Filter by search query
       if (_searchQuery.trim().isNotEmpty) {
-        final query = _searchQuery.trim();
-        final matchesName = s.name.contains(query);
-        final matchesEnglish = s.englishName.toLowerCase().contains(query.toLowerCase());
-        final matchesNumber = s.id.toString() == query;
+        final query = TextNormalizer.normalize(_searchQuery);
+        final normalizedName = TextNormalizer.normalize(s.name);
+        final normalizedDigits = TextNormalizer.normalizeDigits(_searchQuery.trim());
+        final matchesName = query.isNotEmpty && normalizedName.contains(query);
+        final matchesEnglish = s.englishName.toLowerCase().contains(_searchQuery.trim().toLowerCase());
+        final matchesNumber = s.id.toString() == normalizedDigits;
         return matchesName || matchesEnglish || matchesNumber;
       }
       return true;

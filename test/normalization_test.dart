@@ -47,6 +47,15 @@ void main() {
       expect(normalized, 'بسم الله الرحمن الرحيم');
     });
 
+    test('Folds hamza carriers while preserving their base letters', () {
+      expect(TextNormalizer.normalize('سُئِلَ وَسَأَلَ وَرُؤْيَا'), 'سيل وسال ورويا');
+    });
+
+    test('Converts Arabic-Indic and Eastern Arabic-Indic digits', () {
+      expect(TextNormalizer.normalizeDigits('١١٤'), '114');
+      expect(TextNormalizer.normalizeDigits('۱۲۳'), '123');
+    });
+
     test('Removes tatweel / kashida (ـ)', () {
       const input = 'الـــرحـــمـــن';
       final normalized = TextNormalizer.normalize(input);

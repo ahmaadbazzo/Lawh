@@ -110,6 +110,49 @@ class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
       dividerTheme: DividerThemeData(color: border, thickness: 1),
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: LawhPageTransitionsBuilder(),
+          TargetPlatform.iOS: LawhPageTransitionsBuilder(),
+          TargetPlatform.linux: LawhPageTransitionsBuilder(),
+          TargetPlatform.macOS: LawhPageTransitionsBuilder(),
+          TargetPlatform.windows: LawhPageTransitionsBuilder(),
+          TargetPlatform.fuchsia: LawhPageTransitionsBuilder(),
+        },
+      ),
+    );
+  }
+}
+
+
+class LawhPageTransitionsBuilder extends PageTransitionsBuilder {
+  const LawhPageTransitionsBuilder();
+
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    if (MediaQuery.maybeOf(context)?.disableAnimations ?? false) {
+      return child;
+    }
+    final curved = CurvedAnimation(
+      parent: animation,
+      curve: Curves.easeOutCubic,
+      reverseCurve: Curves.easeInCubic,
+    );
+    final begin = Directionality.of(context) == TextDirection.rtl
+        ? const Offset(0.08, 0)
+        : const Offset(-0.08, 0);
+    return FadeTransition(
+      opacity: curved,
+      child: SlideTransition(
+        position: Tween<Offset>(begin: begin, end: Offset.zero).animate(curved),
+        child: child,
+      ),
     );
   }
 }

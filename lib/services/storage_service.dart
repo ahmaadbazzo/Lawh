@@ -18,6 +18,9 @@ class StorageService {
   static const String _keyWritingDraftPrefix = 'lawh_writing_page_';
   static const String _keyLastWritingPage = 'lawh_last_writing_page';
   static const String _keyWritingOpacity = 'lawh_writing_verse_opacity';
+  static const String _keyDailyGoal = 'lawh_daily_goal';
+  static const String _keyDailyCountDate = 'lawh_daily_count_date';
+  static const String _keyDailyCount = 'lawh_daily_count';
 
   late SharedPreferences _prefs;
 
@@ -31,11 +34,30 @@ class StorageService {
   int getStreak() => _prefs.getInt(_keyStreak) ?? 0;
   String getLastDate() => _prefs.getString(_keyLastDate) ?? '';
 
+  int getDailyGoal() => _prefs.getInt(_keyDailyGoal) ?? 10;
+
+  Future<void> setDailyGoal(int value) async {
+    await _prefs.setInt(_keyDailyGoal, value.clamp(1, 500).toInt());
+  }
+
+  int getDailyCompleted() {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final saved = DateTime.tryParse(_prefs.getString(_keyDailyCountDate) ?? '');
+    if (saved == null || saved.year != today.year || saved.month != today.month || saved.day != today.day) return 0;
+    return _prefs.getInt(_keyDailyCount) ?? 0;
+  }
+
   Future<void> recordAnswer({required bool isCorrect}) async {
     final tested = getTotalTested() + 1;
     final correct = getTotalCorrect() + (isCorrect ? 1 : 0);
     await _prefs.setInt(_keyTotalTested, tested);
     await _prefs.setInt(_keyTotalCorrect, correct);
+    final now = DateTime.now();
+    final todayKey = now.year.toString() + '-' + now.month.toString().padLeft(2, '0') + '-' + now.day.toString().padLeft(2, '0');
+    final todayCount = _prefs.getString(_keyDailyCountDate) == todayKey ? (_prefs.getInt(_keyDailyCount) ?? 0) + 1 : 1;
+    await _prefs.setString(_keyDailyCountDate, todayKey);
+    await _prefs.setInt(_keyDailyCount, todayCount);
 
     // Update streak based on calendar day
     final now = DateTime.now();
@@ -48,7 +70,9 @@ class StorageService {
     } else if (lastDateStr != todayStr) {
       final lastDate = DateTime.tryParse(lastDateStr);
       if (lastDate != null) {
-        final diffDays = now.difference(lastDate).inDays;
+        final today = DateTime(now.year, now.month, now.day);
+        final previousDay = DateTime(lastDate.year, lastDate.month, lastDate.day);
+        final diffDays = today.difference(previousDay).inDays;
         if (diffDays == 1) {
           await _prefs.setInt(_keyStreak, getStreak() + 1);
         } else if (diffDays > 1) {
@@ -172,6 +196,9 @@ class StorageService {
     await _prefs.remove(_keyTotalTested);
     await _prefs.remove(_keyTotalCorrect);
     await _prefs.remove(_keyStreak);
+    await _prefs.remove(_keyLastDate);
+    await _prefs.remove(_keyDailyCountDate);
+    await _prefs.remove(_keyDailyCount);
     await _prefs.remove(_keyCompletedSurahs);
     await _prefs.remove(_keyMistakes);
   }

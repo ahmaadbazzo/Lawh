@@ -272,9 +272,14 @@ class _TestScreenState extends State<TestScreen> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                _buildMushafPage(
-                  surah.id, currentAyah.ayah, isDark,
-                  wordHighlights: wordHighlights,
+                Opacity(
+                  // Keep the Mushaf as a soft writing guide beneath the
+                  // transparent typing layer.
+                  opacity: 0.34,
+                  child: _buildMushafPage(
+                    surah.id, currentAyah.ayah, isDark,
+                    wordHighlights: wordHighlights,
+                  ),
                 ),
                 if (!test.isChecked)
                   TextField(

@@ -133,7 +133,6 @@ class _TestScreenState extends State<TestScreen> {
           ),
           child: QuranPageView(
             wordHighlights: wordHighlights,
-            key: ValueKey('mushaf-page-$pageNumber'),
             pageController: _mushafPageController,
             highlights: [
               HighlightVerse(
@@ -146,6 +145,9 @@ class _TestScreenState extends State<TestScreen> {
             isDarkMode: isDark,
             isTajweed: false,
             enableTwoPageLayout: false,
+            // Build jumped-to pages immediately; deferred rendering can leave
+            // the first frame blank after a programmatic page jump.
+            deferNewPages: false,
             pageBackgroundColor:
                 isDark ? const Color(0xFF1D2924) : const Color(0xFFFFFDF7),
           ),

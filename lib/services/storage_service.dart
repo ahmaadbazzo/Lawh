@@ -88,13 +88,13 @@ class StorageService {
   int getLastWritingPage() => _prefs.getInt(_keyLastWritingPage) ?? 1;
 
   Future<void> saveLastWritingPage(int page) async {
-    await _prefs.setInt(_keyLastWritingPage, page.clamp(1, 604));
+    await _prefs.setInt(_keyLastWritingPage, page.clamp(1, 604).toInt());
   }
 
   double getWritingOpacity() => _prefs.getDouble(_keyWritingOpacity) ?? 0.30;
 
   Future<void> saveWritingOpacity(double value) async {
-    await _prefs.setDouble(_keyWritingOpacity, value.clamp(0.08, 0.75));
+    await _prefs.setDouble(_keyWritingOpacity, value.clamp(0.08, 0.75).toDouble());
   }
 
   String getWritingDraft(int page) =>

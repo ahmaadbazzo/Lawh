@@ -18,7 +18,6 @@ void main() {
     });
 
     test('Unifies Teh Marbuta (ة -> ه)', () {
-      const input = 'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ';
       const inputWithTeh = 'الصَّلَاة وَالزَّكَاة';
       expect(TextNormalizer.normalize(inputWithTeh), 'الصلاه والزكاه');
     });

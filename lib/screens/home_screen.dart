@@ -59,6 +59,8 @@ class HomeScreen extends StatelessWidget {
               _HeroHeader(isDark: isDark),
               const SizedBox(height: 18),
               const _ContinueCard(),
+              const SizedBox(height: 12),
+              const _ContinueWritingCard(),
               const SizedBox(height: 26),
               const OrnateTitle('إحصائيات الحفظ'),
               const SizedBox(height: 12),
@@ -279,6 +281,90 @@ class _ContinueCard extends StatelessWidget {
             ),
             const Icon(Icons.arrow_back_ios_new_rounded, size: 16, color: AppColors.accentGold),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ContinueWritingCard extends StatelessWidget {
+  const _ContinueWritingCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final storage = context.read<StorageService>();
+    final page = storage.getLastWritingPage();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => MushafWritingScreen(initialPage: page),
+          ),
+        ),
+        child: Ink(
+          padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 15),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: isDark
+                  ? const [Color(0xFF174B3A), Color(0xFF0D3025)]
+                  : const [Color(0xFFE9D8AD), Color(0xFFF8EED7)],
+            ),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: AppColors.accentGold.withOpacity(0.8)),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accentGold.withOpacity(0.10),
+                blurRadius: 16,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: AppColors.accentGold.withOpacity(0.18),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.draw_rounded, color: AppColors.accentGold, size: 26),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'متابعة الكتابة على المصحف',
+                      style: TextStyle(
+                        fontFamily: AppTheme.quranFontFamily,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? AppColors.softGold : AppColors.primaryGreenDark,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      'آخر صفحة عملت عليها: $page من 604',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: isDark ? AppColors.textMutedDark : AppColors.textMutedLight,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_back_ios_new_rounded, size: 15, color: AppColors.accentGold),
+            ],
+          ),
         ),
       ),
     );

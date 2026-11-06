@@ -8,6 +8,7 @@ import '../constants/app_colors.dart';
 import '../services/mushaf_loader.dart';
 import '../services/quran_service.dart';
 import '../services/storage_service.dart';
+import '../services/text_normalizer.dart';
 
 /// A distraction-free writing page. No memorization check or grading.
 class MushafWritingScreen extends StatefulWidget {
@@ -22,8 +23,9 @@ class MushafWritingScreen extends StatefulWidget {
 class _MushafWritingScreenState extends State<MushafWritingScreen> {
   late final PageController _pageController;
   int? _lastMushafPage;
+  bool _hasPositionedMushaf = false;
   int _selectedSurahId = 1;
-  final TextEditingController _writingController = TextEditingController();
+  final _LiveWritingController _writingController = _LiveWritingController();
   final FocusNode _writingFocus = FocusNode();
   late int _page;
   bool _loading = true;
@@ -56,6 +58,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
       final storage = context.read<StorageService>();
       await storage.saveLastWritingPage(requestedPage);
       final draft = storage.getWritingDraft(requestedPage);
+      _writingController.expectedWords = _expectedWordsForPage(requestedPage);
       final savedOpacity = storage.getWritingOpacity();
       _writingController.value = TextEditingValue(
         text: draft,
@@ -76,6 +79,36 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
       });
     }
   }
+
+  List<String> _expectedWordsForPage(int pageNumber) {
+    final quran = context.read<QuranService>();
+    final words = <String>[];
+    for (final ayah in quran.ayahs) {
+      if (getPageNumber(ayah.surah, ayah.ayah) == pageNumber) {
+        words.addAll(ayah.text.split(RegExp(r'\s+')).where((word) => word.isNotEmpty));
+      }
+    }
+    return words;
+  }
+
+  String get _liveFeedback {
+    final typed = _writingController.text.trimRight();
+    if (typed.isEmpty) return 'سيظهر التنبيه أثناء الكتابة';
+    final words = typed.split(RegExp(r'\s+'));
+    final index = words.length - 1;
+    if (index >= _writingController.expectedWords.length) return 'تجاوزت كلمات الصفحة';
+    final actual = TextNormalizer.normalize(words.last);
+    final expected = TextNormalizer.normalize(_writingController.expectedWords[index]);
+    final partial = !_writingController.text.endsWith(' ');
+    if (actual == expected || (partial && actual.isNotEmpty && expected.startsWith(actual))) {
+      return 'الكلمة الحالية مطابقة';
+    }
+    return 'انتبه: الكلمة الحالية مختلفة عن نص الصفحة';
+  }
+
+  bool get _liveWordIsCorrect =>
+      _liveFeedback == 'الكلمة الحالية مطابقة' ||
+      _liveFeedback == 'سيظهر التنبيه أثناء الكتابة';
 
   Future<void> _saveDraftNow() async {
     _saveDebounce?.cancel();
@@ -133,7 +166,13 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
       _lastMushafPage = _page;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted && _pageController.hasClients) {
-          _pageController.jumpToPage(_page - 1);
+          if (_hasPositionedMushaf) {
+            _pageController.animateToPage(_page - 1,
+              duration: const Duration(milliseconds: 360), curve: Curves.easeInOutCubic);
+          } else {
+            _pageController.jumpToPage(_page - 1);
+            _hasPositionedMushaf = true;
+          }
           debugPrint('LAW H writing Mushaf page positioned: $_page');
         } else {
           debugPrint('LAW H writing Mushaf controller not attached for page $_page');
@@ -147,6 +186,8 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        // Keep the Mushaf viewport at a fixed size when the keyboard opens.
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text('الكتابة فوق المصحف'),
           actions: [
@@ -188,7 +229,17 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 5),
+                  Row(
+                    children: [
+                      Icon(_liveWordIsCorrect ? Icons.check_circle_outline_rounded : Icons.warning_amber_rounded,
+                        size: 15, color: _liveWordIsCorrect ? AppColors.primaryGreenLight : AppColors.mistakeRed),
+                      const SizedBox(width: 6),
+                      Expanded(child: Text(_liveFeedback, maxLines: 1, overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: 11, color: _liveWordIsCorrect ? AppColors.primaryGreenLight : AppColors.mistakeRed))),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
                   Row(
                     children: [
                       const Icon(Icons.menu_book_rounded, size: 17, color: AppColors.accentGold),
@@ -287,7 +338,10 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                                 }
                                 // Load the selected page font on demand; nearby pages
                                 // are loaded only as the user navigates to them.
-                                MushafLoader.ensureReady(pageNumber);
+                                _writingController.expectedWords = _expectedWordsForPage(pageNumber);
+                                MushafLoader.ensureReady(pageNumber).catchError((error) {
+                                  debugPrint('LAW H page font retry needed ($pageNumber): $error');
+                                });
                               },
                             ),
                           ),
@@ -305,7 +359,12 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                               textAlign: TextAlign.center,
                               textAlignVertical: TextAlignVertical.top,
                               keyboardType: TextInputType.multiline,
-                              onChanged: _scheduleSave,
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              onChanged: (value) {
+                                _scheduleSave(value);
+                                _writingController.notifyListeners();
+                              },
                               cursorColor: AppColors.accentGold,
                               style: TextStyle(
                                 fontFamily: 'QuranHafs',
@@ -453,5 +512,52 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
     );
     controller.dispose();
     if (value != null) _goToPage(value);
+  }
+}
+
+
+/// Colors each typed word immediately against the words on the currently
+/// displayed Mushaf page. Partial prefixes are accepted while the user types.
+class _LiveWritingController extends TextEditingController {
+  List<String> expectedWords = const <String>[];
+
+  @override
+  TextSpan buildTextSpan({
+    required BuildContext context,
+    TextStyle? style,
+    required bool withComposing,
+  }) {
+    final base = style ?? const TextStyle();
+    final spans = <InlineSpan>[];
+    final matches = RegExp(r'\s+|\S+').allMatches(text);
+    var wordIndex = 0;
+    for (final match in matches) {
+      final token = match.group(0)!;
+      if (RegExp(r'^\s+$').hasMatch(token)) {
+        spans.add(TextSpan(text: token, style: base));
+        continue;
+      }
+      final normalized = TextNormalizer.normalize(token);
+      final isLastPartial = wordIndex == expectedWordCount - 1 && !text.endsWith(' ');
+      final expected = wordIndex < expectedWords.length
+          ? TextNormalizer.normalize(expectedWords[wordIndex])
+          : '';
+      final correct = wordIndex < expectedWords.length &&
+          (normalized == expected ||
+              (isLastPartial && normalized.isNotEmpty && expected.startsWith(normalized)));
+      spans.add(TextSpan(
+        text: token,
+        style: base.copyWith(
+          color: correct ? base.color : const Color(0xFFE05252),
+        ),
+      ));
+      wordIndex++;
+    }
+    return TextSpan(style: base, children: spans);
+  }
+
+  int get expectedWordCount {
+    final typed = text.trimRight();
+    return typed.isEmpty ? 0 : typed.split(RegExp(r'\s+')).length;
   }
 }

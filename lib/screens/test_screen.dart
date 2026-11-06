@@ -22,6 +22,7 @@ class _TestScreenState extends State<TestScreen> {
   final FocusNode _focusNode = FocusNode();
   final PageController _mushafPageController = PageController();
   int? _lastMushafPage;
+  final Set<int> _fontLoadsInProgress = <int>{};
 
   @override
   void dispose() {
@@ -108,8 +109,29 @@ class _TestScreenState extends State<TestScreen> {
     );
   }
 
+  void _ensureMushafPageFont(int pageNumber) {
+    if (QcfFontLoader.isFontLoaded(pageNumber) ||
+        !_fontLoadsInProgress.add(pageNumber)) {
+      return;
+    }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await QcfFontLoader.ensureFontLoaded(pageNumber);
+        debugPrint('QCF page font ready: $pageNumber');
+      } catch (error, stackTrace) {
+        debugPrint('QCF page font failed ($pageNumber): $error');
+        debugPrintStack(stackTrace: stackTrace);
+      } finally {
+        _fontLoadsInProgress.remove(pageNumber);
+        if (mounted) setState(() {});
+      }
+    });
+  }
+
   Widget _buildMushafPage(int surahNumber, int ayahNumber, bool isDark, {List<WordHighlight> wordHighlights = const []}) {
     final pageNumber = getPageNumber(surahNumber, ayahNumber);
+    _ensureMushafPageFont(pageNumber);
     if (_lastMushafPage != pageNumber) {
       _lastMushafPage = pageNumber;
       WidgetsBinding.instance.addPostFrameCallback((_) {

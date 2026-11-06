@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:qcf_quran_plus/qcf_quran_plus.dart';
+import 'package:qcf_quran_plus/src/widgets/quran_page/quran_repository.dart';
 
 import 'constants/app_theme.dart';
 import 'providers/progress_provider.dart';
@@ -57,6 +58,17 @@ void main() async {
     );
   } catch (error, stackTrace) {
     debugPrint('QCF font initialization failed: $error');
+    debugPrintStack(stackTrace: stackTrace);
+  }
+
+  // The package's page widget returns an empty box until its page repository
+  // is ready. Ensure that data loading has completed even if font setup
+  // stopped early after a font-loading error.
+  try {
+    await QuranRepository.instance.ensureLoaded(604);
+    debugPrint('QCF Quran page data ready: 604 pages');
+  } catch (error, stackTrace) {
+    debugPrint('QCF Quran page data initialization failed: $error');
     debugPrintStack(stackTrace: stackTrace);
   }
 

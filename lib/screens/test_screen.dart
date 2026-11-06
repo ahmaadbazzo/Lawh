@@ -187,11 +187,15 @@ class _TestScreenState extends State<TestScreen> {
       );
     }
 
-    final targetWords = currentAyah.text
-        .trim()
-        .split(RegExp(r'\s+'))
-        .where((word) => word.isNotEmpty)
-        .toList();
+    // Build the word list explicitly. Avoid Iterable.where here because
+    // release AOT was receiving a dynamically-typed predicate for String.
+    final String targetText = currentAyah.text.toString().trim();
+    final List<String> targetWords = <String>[];
+    for (final String word in targetText.split(RegExp(r'\s+'))) {
+      if (word.isNotEmpty) {
+        targetWords.add(word);
+      }
+    }
     final typedWords = test.userInput.trim().isEmpty
         ? <String>[]
         : test.userInput.trimRight().split(RegExp(r'\s+'));

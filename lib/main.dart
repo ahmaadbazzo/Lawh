@@ -30,7 +30,7 @@ void main() async {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: SelectableText(
-              'Screen rendering error:\n\n$message',
+              'Screen rendering error:\n\n$message\n\nSTACK TRACE:\n${details.stack ?? 'No stack trace available'}',
               style: const TextStyle(
                 color: Colors.red,
                 fontSize: 14,

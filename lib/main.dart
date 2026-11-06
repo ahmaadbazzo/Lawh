@@ -14,16 +14,19 @@ import 'services/storage_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize offline services
   final storageService = StorageService();
   await storageService.init();
 
   final quranService = QuranService();
   await quranService.init();
 
-  // QuranPageView needs the page-specific QCF fonts ready before it is shown.
+  // Load page-specific QCF fonts before the Mushaf screen can be opened.
   try {
-    await QcfFontLoader.setupFontsAtStartup();
+    await QcfFontLoader.setupFontsAtStartup(
+      onProgress: (progress) {
+        debugPrint('QCF font loading: ${(progress * 100).toStringAsFixed(1)}%');
+      },
+    );
   } catch (error, stackTrace) {
     debugPrint('QCF font initialization failed: $error');
     debugPrintStack(stackTrace: stackTrace);

@@ -12,6 +12,7 @@ import 'mistakes_screen.dart';
 import 'settings_screen.dart';
 import 'surah_picker_screen.dart';
 import 'test_screen.dart';
+import 'mushaf_writing_screen.dart';
 
 const String _bismillah = 'بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ';
 
@@ -63,7 +64,24 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 12),
               _StatsGrid(progress: progress),
               const SizedBox(height: 26),
-              const OrnateTitle('طرق الاختبار والتسميع'),
+              const OrnateTitle('الكتابة على المصحف'),
+              const SizedBox(height: 12),
+              _ModeTile(
+                title: 'الكتابة فوق المصحف',
+                subtitle: 'تبقى الآيات كاملة وواضحة أمامك، واكتب مباشرة فوق الصفحة دون اختبار أو تصحيح.',
+                icon: Icons.draw_rounded,
+                color: AppColors.accentGold,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const MushafWritingScreen(),
+                    ),
+                  );
+                },
+              ),
+              const SizedBox(height: 24),
+              const OrnateTitle('أدوات التسميع'),
               const SizedBox(height: 12),
               _ModeTile(
                 title: 'اختبار آية بآية',
@@ -173,7 +191,7 @@ class _HeroHeader extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           const Text(
-            'اكتب من صدرك، وثبّت ما حفظت',
+            'صفحتك القرآنية… اكتب عليها كما تشاء',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontFamily: AppTheme.quranFontFamily,
@@ -183,7 +201,7 @@ class _HeroHeader extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'اختبر حفظك للقرآن الكريم كتابةً من الذاكرة، وتحقق من كل كلمة.',
+            'اقرأ، اكتب، ودوّن على صفحات المصحف بواجهة هادئة وواضحة.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,

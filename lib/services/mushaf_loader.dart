@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 import 'package:qcf_quran_plus/src/widgets/quran_page/quran_repository.dart';
 

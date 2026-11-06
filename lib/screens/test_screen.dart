@@ -101,13 +101,7 @@ class _TestScreenState extends State<TestScreen> {
         ),
         body: MushafBackground(
           child: _buildFullPageTestBody(
-            context,
-            test,
-            theme,
-            isDark,
-            surah,
-            currentAyah,
-            progressRatio,
+            context, test, theme, isDark, surah, currentAyah, progressRatio,
           ),
         ),
       ),
@@ -157,6 +151,177 @@ class _TestScreenState extends State<TestScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildFullPageTestBody(
+    BuildContext context,
+    TestProvider test,
+    ThemeProvider theme,
+    bool isDark,
+    dynamic surah,
+    dynamic currentAyah,
+    double progressRatio,
+  ) {
+    if (test.mode == TestMode.freeRecitation) {
+      return Column(
+        children: [
+          LinearProgressIndicator(
+            value: progressRatio,
+            backgroundColor: isDark ? AppColors.surfaceDark : AppColors.borderLight,
+            color: AppColors.accentGold,
+            minHeight: 5,
+          ),
+          Expanded(
+            child: _buildMushafPage(surah.id, currentAyah.ayah, isDark),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: _buildFreeRecitationInput(
+              context, test, theme.quranFontSize, isDark,
+            ),
+          ),
+        ],
+      );
+    }
+
+    final targetWords = currentAyah.text
+        .trim()
+        .split(RegExp(r'\\s+'))
+        .where((word) => word.isNotEmpty)
+        .toList();
+    final typedWords = test.userInput.trim().isEmpty
+        ? <String>[]
+        : test.userInput.trimRight().split(RegExp(r'\\s+'));
+    final wordHighlights = <WordHighlight>[];
+    for (var i = 0; i < typedWords.length && i < targetWords.length; i++) {
+      final typed = TextNormalizer.normalize(typedWords[i]);
+      final target = TextNormalizer.normalize(targetWords[i]);
+      final isPartial = i == typedWords.length - 1 && !test.userInput.endsWith(' ');
+      final isCorrect = typed == target ||
+          (isPartial && typed.isNotEmpty && target.startsWith(typed));
+      final wordColor = isCorrect ? AppColors.correctGreen : AppColors.mistakeRed;
+      wordHighlights.add(
+        WordHighlight(
+          surah: surah.id,
+          verseNumber: currentAyah.ayah,
+          wordIndex: i,
+          textColor: wordColor,
+          backgroundColor: wordColor.withOpacity(0.16),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        LinearProgressIndicator(
+          value: progressRatio,
+          backgroundColor: isDark ? AppColors.surfaceDark : AppColors.borderLight,
+          color: AppColors.accentGold,
+          minHeight: 5,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'سورة ${surah.name}  •  الآية ${toArabicDigits(currentAyah.ayah)}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Text(
+                '${toArabicDigits(test.currentIndex + 1)} / ${toArabicDigits(test.sessionAyahs.length)}',
+                style: const TextStyle(color: AppColors.accentGold, fontWeight: FontWeight.bold),
+              ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                _buildMushafPage(
+                  surah.id, currentAyah.ayah, isDark,
+                  wordHighlights: wordHighlights,
+                ),
+                if (!test.isChecked)
+                  TextField(
+                    controller: _textController,
+                    focusNode: _focusNode,
+                    autofocus: true,
+                    expands: true,
+                    maxLines: null,
+                    minLines: null,
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.text,
+                    cursorColor: AppColors.accentGold,
+                    cursorWidth: 2,
+                    style: const TextStyle(
+                      color: Colors.transparent, fontSize: 1, height: 1,
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                      isCollapsed: true,
+                    ),
+                    onChanged: test.setUserInput,
+                    onSubmitted: (_) {
+                      if (test.userInput.trim().isNotEmpty) {
+                        test.checkCurrentVerse();
+                      }
+                    },
+                  ),
+                if (test.userInput.isEmpty && !test.isChecked)
+                  IgnorePointer(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                        decoration: BoxDecoration(
+                          color: (isDark ? Colors.black : Colors.white).withOpacity(0.78),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: AppColors.accentGold.withOpacity(0.5)),
+                        ),
+                        child: const Text(
+                          'ابدأ الكتابة… ستتلوّن الكلمات حسب إجابتك',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+        if (test.hintText.isNotEmpty && !test.isChecked)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            child: Text(
+              test.hintText,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontSize: 12, color: AppColors.accentAmber),
+            ),
+          ),
+        if (test.isChecked && test.lastResult != null)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
+            child: _buildResultFeedback(
+              context, test.lastResult!, currentAyah.text, currentAyah.ayah,
+              theme.quranFontSize, isDark,
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
+          child: _buildActionButtons(context, test),
+        ),
+      ],
     );
   }
 
@@ -236,186 +401,7 @@ class _TestScreenState extends State<TestScreen> {
               ),
               Text(
                 'الدقة: ${(result.accuracy * 100).toInt()}%',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)  Widget _buildFullPageTestBody(
-    BuildContext context,
-    TestProvider test,
-    ThemeProvider theme,
-    bool isDark,
-    dynamic surah,
-    dynamic currentAyah,
-    double progressRatio,
-  ) {
-    if (test.mode == TestMode.freeRecitation) {
-      return Column(
-        children: [
-          LinearProgressIndicator(
-            value: progressRatio,
-            backgroundColor: isDark ? AppColors.surfaceDark : AppColors.borderLight,
-            color: AppColors.accentGold,
-            minHeight: 5,
-          ),
-          Expanded(
-            child: _buildMushafPage(surah.id, currentAyah.ayah, isDark),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: _buildFreeRecitationInput(
-              context, test, theme.quranFontSize, isDark,
-            ),
-          ),
-        ],
-      );
-    }
-
-    final targetWords = currentAyah.text
-        .trim()
-        .split(RegExp(r'\\s+'))
-        .where((word) => word.isNotEmpty)
-        .toList();
-    final typedWords = test.userInput.trim().isEmpty
-        ? <String>[]
-        : test.userInput.trimRight().split(RegExp(r'\\s+'));
-    final wordHighlights = <WordHighlight>[];
-    for (var i = 0; i < typedWords.length && i < targetWords.length; i++) {
-      final typed = TextNormalizer.normalize(typedWords[i]);
-      final target = TextNormalizer.normalize(targetWords[i]);
-      final isPartial = i == typedWords.length - 1 && !test.userInput.endsWith(' ');
-      final isCorrect = typed == target ||
-          (isPartial && typed.isNotEmpty && target.startsWith(typed));
-      wordHighlights.add(
-        WordHighlight(
-          surah: surah.id,
-          verseNumber: currentAyah.ayah,
-          wordIndex: i,
-          textColor: isCorrect ? AppColors.correctGreen : AppColors.mistakeRed,
-          backgroundColor: (isCorrect ? AppColors.correctGreen : AppColors.mistakeRed)
-              .withOpacity(0.16),
-        ),
-      );
-    }
-
-    return Column(
-      children: [
-        LinearProgressIndicator(
-          value: progressRatio,
-          backgroundColor: isDark ? AppColors.surfaceDark : AppColors.borderLight,
-          color: AppColors.accentGold,
-          minHeight: 5,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  'سورة ${surah.name}  •  الآية ${toArabicDigits(currentAyah.ayah)}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              Text(
-                '${toArabicDigits(test.currentIndex + 1)} / ${toArabicDigits(test.sessionAyahs.length)}',
-                style: const TextStyle(color: AppColors.accentGold, fontWeight: FontWeight.bold),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                _buildMushafPage(
-                  surah.id,
-                  currentAyah.ayah,
-                  isDark,
-                  wordHighlights: wordHighlights,
-                ),
-                if (!test.isChecked)
-                  TextField(
-                    controller: _textController,
-                    focusNode: _focusNode,
-                    autofocus: true,
-                    expands: true,
-                    maxLines: null,
-                    minLines: null,
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.text,
-                    cursorColor: AppColors.accentGold,
-                    cursorWidth: 2,
-                    style: const TextStyle(
-                      color: Colors.transparent,
-                      fontSize: 1,
-                      height: 1,
-                    ),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-                      isCollapsed: true,
-                    ),
-                    onChanged: test.setUserInput,
-                    onSubmitted: (_) {
-                      if (test.userInput.trim().isNotEmpty) {
-                        test.checkCurrentVerse();
-                      }
-                    },
-                  ),
-                if (test.userInput.isEmpty && !test.isChecked)
-                  IgnorePointer(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
-                        decoration: BoxDecoration(
-                          color: (isDark ? Colors.black : Colors.white).withOpacity(0.78),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: AppColors.accentGold.withOpacity(0.5)),
-                        ),
-                        child: const Text(
-                          'ابدأ الكتابة… ستتلوّن الكلمات حسب إجابتك',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ),
-        if (test.hintText.isNotEmpty && !test.isChecked)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            child: Text(
-              test.hintText,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 12, color: AppColors.accentAmber),
-            ),
-          ),
-        if (test.isChecked && test.lastResult != null)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(12, 4, 12, 8),
-            child: _buildResultFeedback(
-              context,
-              test.lastResult!,
-              currentAyah.text,
-              currentAyah.ayah,
-              theme.quranFontSize,
-              isDark,
-            ),
-          ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 4, 12, 10),
-          child: _buildActionButtons(context, test),
-        ),
-      ],
-    );
-  }
-
-,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ],
           ),

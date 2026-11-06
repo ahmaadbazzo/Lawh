@@ -91,7 +91,7 @@ def patch_kotlin():
     text = insert_before(r"^android\s*\{", KOTLIN_PROPS, text, "Could not find android { block in build.gradle.kts")
     text = insert_before(r"^\s*buildTypes\s*\{", KOTLIN_SIGNING, text, "Could not find buildTypes { block in build.gradle.kts")
     patterns = [
-        (r"signingConfig\s*=\s*signingConfigs\.getByName\([\\"']debug[\\"']\)",
+        (r'signingConfig\s*=\s*signingConfigs\.getByName\("debug"\)',
          'signingConfig = signingConfigs.getByName("release")'),
         (r"signingConfig\s*=\s*signingConfigs\.debug",
          'signingConfig = signingConfigs.getByName("release")'),

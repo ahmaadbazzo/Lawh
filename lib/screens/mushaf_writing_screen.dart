@@ -48,7 +48,9 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
     try {
       await MushafLoader.ensureReady(requestedPage);
       if (!mounted || requestedPage != _page) return;
-      final draft = context.read<StorageService>().getWritingDraft(requestedPage);
+      final storage = context.read<StorageService>();
+      await storage.saveLastWritingPage(requestedPage);
+      final draft = storage.getWritingDraft(requestedPage);
       _writingController.value = TextEditingValue(
         text: draft,
         selection: TextSelection.collapsed(offset: draft.length),
@@ -87,6 +89,8 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
     final next = value.clamp(1, 604).toInt();
     if (next == _page) return;
     await _saveDraftNow();
+    if (!mounted) return;
+    await context.read<StorageService>().saveLastWritingPage(next);
     if (!mounted) return;
     setState(() {
       _page = next;

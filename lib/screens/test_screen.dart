@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_theme.dart';
 import '../widgets/ornaments.dart';
@@ -19,11 +20,14 @@ class _TestScreenState extends State<TestScreen> {
   final _GhostTextController _textController = _GhostTextController();
   String? _activeAyahText;
   final FocusNode _focusNode = FocusNode();
+  final PageController _mushafPageController = PageController();
+  int? _lastMushafPage;
 
   @override
   void dispose() {
     _textController.dispose();
     _focusNode.dispose();
+    _mushafPageController.dispose();
     super.dispose();
   }
 
@@ -119,6 +123,14 @@ class _TestScreenState extends State<TestScreen> {
                     ),
                     const SizedBox(height: 16),
 
+                    // Authentic 604-page Madinah Mushaf renderer.
+                    _buildMushafPage(
+                      surah.id,
+                      currentAyah.ayah,
+                      isDark,
+                    ),
+                    const SizedBox(height: 16),
+
                     // Hint Area
                     if (test.hintText.isNotEmpty) _buildHintCard(context, test.hintText, isDark),
                     const SizedBox(height: 16),
@@ -188,6 +200,52 @@ class _TestScreenState extends State<TestScreen> {
             ),
           ],
         )),
+      ),
+    );
+  }
+
+  Widget _buildMushafPage(int surahNumber, int ayahNumber, bool isDark) {
+    final pageNumber = getPageNumber(surahNumber, ayahNumber);
+    if (_lastMushafPage != pageNumber) {
+      _lastMushafPage = pageNumber;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _mushafPageController.hasClients) {
+          _mushafPageController.jumpToPage(pageNumber - 1);
+        }
+      });
+    }
+
+    return SizedBox(
+      height: 430,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(14),
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF1D2924) : const Color(0xFFFFFDF7),
+            border: Border.all(
+              color: AppColors.accentGold.withOpacity(0.65),
+              width: 1.2,
+            ),
+            borderRadius: BorderRadius.circular(14),
+          ),
+          child: QuranPageView(
+            key: ValueKey('mushaf-page-$pageNumber'),
+            pageController: _mushafPageController,
+            highlights: [
+              HighlightVerse(
+                surah: surahNumber,
+                verseNumber: ayahNumber,
+                page: pageNumber,
+                color: AppColors.accentGold.withOpacity(0.22),
+              ),
+            ],
+            isDarkMode: isDark,
+            isTajweed: false,
+            enableTwoPageLayout: false,
+            pageBackgroundColor:
+                isDark ? const Color(0xFF1D2924) : const Color(0xFFFFFDF7),
+          ),
+        ),
       ),
     );
   }

@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 
 import '../constants/app_colors.dart';
 import '../services/mushaf_loader.dart';
+import '../services/storage_service.dart';
 
 /// A distraction-free writing page. No memorization check or grading.
 class MushafWritingScreen extends StatefulWidget {
@@ -21,6 +25,9 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
   late int _page;
   bool _loading = true;
   bool _loadFailed = false;
+  double _verseOpacity = 0.30;
+  Timer? _saveDebounce;
+  bool _saved = true;
 
   @override
   void initState() {
@@ -41,7 +48,15 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
     try {
       await MushafLoader.ensureReady(requestedPage);
       if (!mounted || requestedPage != _page) return;
-      setState(() => _loading = false);
+      final draft = context.read<StorageService>().getWritingDraft(requestedPage);
+      _writingController.value = TextEditingValue(
+        text: draft,
+        selection: TextSelection.collapsed(offset: draft.length),
+      );
+      setState(() {
+        _loading = false;
+        _saved = true;
+      });
     } catch (error, stackTrace) {
       debugPrint('LAW H writing page load failed: $error');
       debugPrintStack(stackTrace: stackTrace);
@@ -53,19 +68,45 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
     }
   }
 
-  void _goToPage(int value) {
+  Future<void> _saveDraftNow() async {
+    _saveDebounce?.cancel();
+    await context.read<StorageService>().saveWritingDraft(
+      _page,
+      _writingController.text,
+    );
+    if (mounted) setState(() => _saved = true);
+  }
+
+  void _scheduleSave(String value) {
+    _saveDebounce?.cancel();
+    setState(() => _saved = false);
+    _saveDebounce = Timer(const Duration(milliseconds: 450), _saveDraftNow);
+  }
+
+  Future<void> _goToPage(int value) async {
     final next = value.clamp(1, 604).toInt();
     if (next == _page) return;
+    await _saveDraftNow();
+    if (!mounted) return;
     setState(() {
       _page = next;
       _writingController.clear();
+      _loading = true;
     });
     _pageController.jumpToPage(next - 1);
     _preparePage();
   }
 
+  Future<void> _clearWriting() async {
+    _saveDebounce?.cancel();
+    _writingController.clear();
+    await context.read<StorageService>().saveWritingDraft(_page, '');
+    if (mounted) setState(() => _saved = true);
+  }
+
   @override
   void dispose() {
+    _saveDebounce?.cancel();
     _pageController.dispose();
     _writingController.dispose();
     _writingFocus.dispose();
@@ -85,7 +126,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
           actions: [
             IconButton(
               tooltip: 'مسح الكتابة',
-              onPressed: _writingController.clear,
+              onPressed: _clearWriting,
               icon: const Icon(Icons.cleaning_services_rounded),
             ),
           ],
@@ -93,26 +134,55 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
         body: Column(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.fromLTRB(14, 8, 14, 10),
               color: isDark ? const Color(0xFF14231D) : const Color(0xFFF1EBDD),
-              child: Row(
+              child: Column(
                 children: [
-                  const Icon(Icons.auto_stories_rounded, color: AppColors.accentGold),
-                  const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text(
-                      'الآيات ظاهرة أمامك دائماً — اكتب مباشرة فوق الصفحة',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                    ),
+                  Row(
+                    children: [
+                      const Icon(Icons.auto_stories_rounded, color: AppColors.accentGold),
+                      const SizedBox(width: 8),
+                      const Expanded(
+                        child: Text(
+                          'اكتب مباشرة فوق الآيات — تُحفظ كتابتك تلقائياً',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Icon(
+                        _saved ? Icons.cloud_done_rounded : Icons.cloud_upload_outlined,
+                        size: 17,
+                        color: _saved ? AppColors.primaryGreenLight : AppColors.accentGold,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        _saved ? 'محفوظ' : 'جارٍ الحفظ',
+                        style: const TextStyle(fontSize: 11, color: AppColors.accentGold),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'صفحة $_page / 604',
-                    style: const TextStyle(
-                      color: AppColors.accentGold,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      const Icon(Icons.visibility_outlined, size: 17, color: AppColors.accentGold),
+                      const SizedBox(width: 7),
+                      const Text('وضوح الآيات', style: TextStyle(fontSize: 12)),
+                      Expanded(
+                        child: Slider(
+                          value: _verseOpacity,
+                          min: 0.08,
+                          max: 0.75,
+                          divisions: 13,
+                          activeColor: AppColors.accentGold,
+                          onChanged: (value) => setState(() => _verseOpacity = value),
+                        ),
+                      ),
+                      Text(
+                        '${(_verseOpacity * 100).round()}٪',
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -137,7 +207,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                         Opacity(
                           // Fade only the Mushaf reference layer, not the
                           // writing field or the whole page container.
-                          opacity: 0.30,
+                          opacity: _verseOpacity,
                           child: IgnorePointer(
                             child: QuranPageView(
                               pageController: _pageController,
@@ -163,6 +233,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                               textAlign: TextAlign.center,
                               textAlignVertical: TextAlignVertical.top,
                               keyboardType: TextInputType.multiline,
+                              onChanged: _scheduleSave,
                               cursorColor: AppColors.accentGold,
                               style: TextStyle(
                                 fontFamily: 'QuranHafs',

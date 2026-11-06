@@ -8,6 +8,7 @@ import '../models/test_session.dart';
 import '../providers/test_provider.dart';
 import '../providers/theme_provider.dart';
 import '../services/text_normalizer.dart';
+import '../services/mushaf_loader.dart';
 
 class TestScreen extends StatefulWidget {
   const TestScreen({Key? key}) : super(key: key);
@@ -117,7 +118,7 @@ class _TestScreenState extends State<TestScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
-        await QcfFontLoader.ensureFontLoaded(pageNumber);
+        await MushafLoader.ensureReady(pageNumber);
         debugPrint('QCF page font ready: $pageNumber');
       } catch (error, stackTrace) {
         debugPrint('QCF page font failed ($pageNumber): $error');

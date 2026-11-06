@@ -48,6 +48,8 @@ jobs:
         run: |
           rm -rf android
           flutter create . --platforms=android --org "$APP_ORG" --project-name lawh
+          # flutter create generates a stale default test that references MyApp.
+          rm -f test/widget_test.dart
 
       - name: Prepare release signing (only if secrets are set)
         env:

@@ -25,7 +25,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
   @override
   void initState() {
     super.initState();
-    _page = widget.initialPage.clamp(1, 604);
+    _page = widget.initialPage.clamp(1, 604).toInt();
     _pageController = PageController(initialPage: _page - 1);
     _preparePage();
   }
@@ -53,7 +53,7 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
   }
 
   void _goToPage(int value) {
-    final next = value.clamp(1, 604);
+    final next = value.clamp(1, 604).toInt();
     if (next == _page) return;
     setState(() {
       _page = next;

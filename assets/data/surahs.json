@@ -1,0 +1,1028 @@
+[
+  {
+    "id": 1,
+    "name": "الفاتحة",
+    "englishName": "Al-Fatihah",
+    "ayahsCount": 7,
+    "revelationType": "مكية",
+    "startJuz": 1,
+    "startPage": 1
+  },
+  {
+    "id": 2,
+    "name": "البقرة",
+    "englishName": "Al-Baqarah",
+    "ayahsCount": 286,
+    "revelationType": "مدنية",
+    "startJuz": 1,
+    "startPage": 2
+  },
+  {
+    "id": 3,
+    "name": "آل عمران",
+    "englishName": "Aal-E-Imran",
+    "ayahsCount": 200,
+    "revelationType": "مدنية",
+    "startJuz": 3,
+    "startPage": 50
+  },
+  {
+    "id": 4,
+    "name": "النساء",
+    "englishName": "An-Nisa",
+    "ayahsCount": 176,
+    "revelationType": "مدنية",
+    "startJuz": 4,
+    "startPage": 77
+  },
+  {
+    "id": 5,
+    "name": "المائدة",
+    "englishName": "Al-Ma'idah",
+    "ayahsCount": 120,
+    "revelationType": "مدنية",
+    "startJuz": 6,
+    "startPage": 106
+  },
+  {
+    "id": 6,
+    "name": "الأنعام",
+    "englishName": "Al-An'am",
+    "ayahsCount": 165,
+    "revelationType": "مكية",
+    "startJuz": 7,
+    "startPage": 128
+  },
+  {
+    "id": 7,
+    "name": "الأعراف",
+    "englishName": "Al-A'raf",
+    "ayahsCount": 206,
+    "revelationType": "مكية",
+    "startJuz": 8,
+    "startPage": 151
+  },
+  {
+    "id": 8,
+    "name": "الأنفال",
+    "englishName": "Al-Anfal",
+    "ayahsCount": 75,
+    "revelationType": "مدنية",
+    "startJuz": 9,
+    "startPage": 177
+  },
+  {
+    "id": 9,
+    "name": "التوبة",
+    "englishName": "At-Tawbah",
+    "ayahsCount": 129,
+    "revelationType": "مدنية",
+    "startJuz": 10,
+    "startPage": 187
+  },
+  {
+    "id": 10,
+    "name": "يونس",
+    "englishName": "Yunus",
+    "ayahsCount": 109,
+    "revelationType": "مكية",
+    "startJuz": 11,
+    "startPage": 208
+  },
+  {
+    "id": 11,
+    "name": "هود",
+    "englishName": "Hud",
+    "ayahsCount": 123,
+    "revelationType": "مكية",
+    "startJuz": 11,
+    "startPage": 221
+  },
+  {
+    "id": 12,
+    "name": "يوسف",
+    "englishName": "Yusuf",
+    "ayahsCount": 111,
+    "revelationType": "مكية",
+    "startJuz": 12,
+    "startPage": 235
+  },
+  {
+    "id": 13,
+    "name": "الرعد",
+    "englishName": "Ar-Ra'd",
+    "ayahsCount": 43,
+    "revelationType": "مدنية",
+    "startJuz": 13,
+    "startPage": 249
+  },
+  {
+    "id": 14,
+    "name": "إبراهيم",
+    "englishName": "Ibrahim",
+    "ayahsCount": 52,
+    "revelationType": "مكية",
+    "startJuz": 13,
+    "startPage": 255
+  },
+  {
+    "id": 15,
+    "name": "الحجر",
+    "englishName": "Al-Hijr",
+    "ayahsCount": 99,
+    "revelationType": "مكية",
+    "startJuz": 14,
+    "startPage": 262
+  },
+  {
+    "id": 16,
+    "name": "النحل",
+    "englishName": "An-Nahl",
+    "ayahsCount": 128,
+    "revelationType": "مكية",
+    "startJuz": 14,
+    "startPage": 267
+  },
+  {
+    "id": 17,
+    "name": "الإسراء",
+    "englishName": "Al-Isra",
+    "ayahsCount": 111,
+    "revelationType": "مكية",
+    "startJuz": 15,
+    "startPage": 282
+  },
+  {
+    "id": 18,
+    "name": "الكهف",
+    "englishName": "Al-Kahf",
+    "ayahsCount": 110,
+    "revelationType": "مكية",
+    "startJuz": 15,
+    "startPage": 293
+  },
+  {
+    "id": 19,
+    "name": "مريم",
+    "englishName": "Maryam",
+    "ayahsCount": 98,
+    "revelationType": "مكية",
+    "startJuz": 16,
+    "startPage": 305
+  },
+  {
+    "id": 20,
+    "name": "طه",
+    "englishName": "Taha",
+    "ayahsCount": 135,
+    "revelationType": "مكية",
+    "startJuz": 16,
+    "startPage": 312
+  },
+  {
+    "id": 21,
+    "name": "الأنبياء",
+    "englishName": "Al-Anbiya",
+    "ayahsCount": 112,
+    "revelationType": "مكية",
+    "startJuz": 17,
+    "startPage": 322
+  },
+  {
+    "id": 22,
+    "name": "الحج",
+    "englishName": "Al-Hajj",
+    "ayahsCount": 78,
+    "revelationType": "مدنية",
+    "startJuz": 17,
+    "startPage": 332
+  },
+  {
+    "id": 23,
+    "name": "المؤمنون",
+    "englishName": "Al-Mu'minun",
+    "ayahsCount": 118,
+    "revelationType": "مكية",
+    "startJuz": 18,
+    "startPage": 342
+  },
+  {
+    "id": 24,
+    "name": "النور",
+    "englishName": "An-Nur",
+    "ayahsCount": 64,
+    "revelationType": "مدنية",
+    "startJuz": 18,
+    "startPage": 350
+  },
+  {
+    "id": 25,
+    "name": "الفرقان",
+    "englishName": "Al-Furqan",
+    "ayahsCount": 77,
+    "revelationType": "مكية",
+    "startJuz": 18,
+    "startPage": 359
+  },
+  {
+    "id": 26,
+    "name": "الشعراء",
+    "englishName": "Ash-Shu'ara",
+    "ayahsCount": 227,
+    "revelationType": "مكية",
+    "startJuz": 19,
+    "startPage": 367
+  },
+  {
+    "id": 27,
+    "name": "النمل",
+    "englishName": "An-Naml",
+    "ayahsCount": 93,
+    "revelationType": "مكية",
+    "startJuz": 19,
+    "startPage": 377
+  },
+  {
+    "id": 28,
+    "name": "القصص",
+    "englishName": "Al-Qasas",
+    "ayahsCount": 88,
+    "revelationType": "مكية",
+    "startJuz": 20,
+    "startPage": 385
+  },
+  {
+    "id": 29,
+    "name": "العنكبوت",
+    "englishName": "Al-Ankabut",
+    "ayahsCount": 69,
+    "revelationType": "مكية",
+    "startJuz": 20,
+    "startPage": 396
+  },
+  {
+    "id": 30,
+    "name": "الروم",
+    "englishName": "Ar-Rum",
+    "ayahsCount": 60,
+    "revelationType": "مكية",
+    "startJuz": 21,
+    "startPage": 404
+  },
+  {
+    "id": 31,
+    "name": "لقمان",
+    "englishName": "Luqman",
+    "ayahsCount": 34,
+    "revelationType": "مكية",
+    "startJuz": 21,
+    "startPage": 411
+  },
+  {
+    "id": 32,
+    "name": "السجدة",
+    "englishName": "As-Sajdah",
+    "ayahsCount": 30,
+    "revelationType": "مكية",
+    "startJuz": 21,
+    "startPage": 415
+  },
+  {
+    "id": 33,
+    "name": "الأحزاب",
+    "englishName": "Al-Ahzab",
+    "ayahsCount": 73,
+    "revelationType": "مدنية",
+    "startJuz": 21,
+    "startPage": 418
+  },
+  {
+    "id": 34,
+    "name": "سبإ",
+    "englishName": "Saba",
+    "ayahsCount": 54,
+    "revelationType": "مكية",
+    "startJuz": 22,
+    "startPage": 428
+  },
+  {
+    "id": 35,
+    "name": "فاطر",
+    "englishName": "Fatir",
+    "ayahsCount": 45,
+    "revelationType": "مكية",
+    "startJuz": 22,
+    "startPage": 434
+  },
+  {
+    "id": 36,
+    "name": "يس",
+    "englishName": "Ya-Sin",
+    "ayahsCount": 83,
+    "revelationType": "مكية",
+    "startJuz": 22,
+    "startPage": 440
+  },
+  {
+    "id": 37,
+    "name": "الصافات",
+    "englishName": "As-Saffat",
+    "ayahsCount": 182,
+    "revelationType": "مكية",
+    "startJuz": 23,
+    "startPage": 446
+  },
+  {
+    "id": 38,
+    "name": "ص",
+    "englishName": "Sad",
+    "ayahsCount": 88,
+    "revelationType": "مكية",
+    "startJuz": 23,
+    "startPage": 453
+  },
+  {
+    "id": 39,
+    "name": "الزمر",
+    "englishName": "Az-Zumar",
+    "ayahsCount": 75,
+    "revelationType": "مكية",
+    "startJuz": 23,
+    "startPage": 458
+  },
+  {
+    "id": 40,
+    "name": "غافر",
+    "englishName": "Ghafir",
+    "ayahsCount": 85,
+    "revelationType": "مكية",
+    "startJuz": 24,
+    "startPage": 467
+  },
+  {
+    "id": 41,
+    "name": "فصلت",
+    "englishName": "Fussilat",
+    "ayahsCount": 54,
+    "revelationType": "مكية",
+    "startJuz": 24,
+    "startPage": 477
+  },
+  {
+    "id": 42,
+    "name": "الشورى",
+    "englishName": "Ash-Shura",
+    "ayahsCount": 53,
+    "revelationType": "مكية",
+    "startJuz": 25,
+    "startPage": 483
+  },
+  {
+    "id": 43,
+    "name": "الزخرف",
+    "englishName": "Az-Zukhruf",
+    "ayahsCount": 89,
+    "revelationType": "مكية",
+    "startJuz": 25,
+    "startPage": 489
+  },
+  {
+    "id": 44,
+    "name": "الدخان",
+    "englishName": "Ad-Dukhan",
+    "ayahsCount": 59,
+    "revelationType": "مكية",
+    "startJuz": 25,
+    "startPage": 496
+  },
+  {
+    "id": 45,
+    "name": "الجاثية",
+    "englishName": "Al-Jathiyah",
+    "ayahsCount": 37,
+    "revelationType": "مكية",
+    "startJuz": 25,
+    "startPage": 499
+  },
+  {
+    "id": 46,
+    "name": "الأحقاف",
+    "englishName": "Al-Ahqaf",
+    "ayahsCount": 35,
+    "revelationType": "مكية",
+    "startJuz": 26,
+    "startPage": 502
+  },
+  {
+    "id": 47,
+    "name": "محمد",
+    "englishName": "Muhammad",
+    "ayahsCount": 38,
+    "revelationType": "مدنية",
+    "startJuz": 26,
+    "startPage": 507
+  },
+  {
+    "id": 48,
+    "name": "الفتح",
+    "englishName": "Al-Fath",
+    "ayahsCount": 29,
+    "revelationType": "مدنية",
+    "startJuz": 26,
+    "startPage": 511
+  },
+  {
+    "id": 49,
+    "name": "الحجرات",
+    "englishName": "Al-Hujurat",
+    "ayahsCount": 18,
+    "revelationType": "مدنية",
+    "startJuz": 26,
+    "startPage": 515
+  },
+  {
+    "id": 50,
+    "name": "ق",
+    "englishName": "Qaf",
+    "ayahsCount": 45,
+    "revelationType": "مكية",
+    "startJuz": 26,
+    "startPage": 518
+  },
+  {
+    "id": 51,
+    "name": "الذاريات",
+    "englishName": "Adh-Dhariyat",
+    "ayahsCount": 60,
+    "revelationType": "مكية",
+    "startJuz": 26,
+    "startPage": 520
+  },
+  {
+    "id": 52,
+    "name": "الطور",
+    "englishName": "At-Tur",
+    "ayahsCount": 49,
+    "revelationType": "مكية",
+    "startJuz": 27,
+    "startPage": 523
+  },
+  {
+    "id": 53,
+    "name": "النجم",
+    "englishName": "An-Najm",
+    "ayahsCount": 62,
+    "revelationType": "مكية",
+    "startJuz": 27,
+    "startPage": 526
+  },
+  {
+    "id": 54,
+    "name": "القمر",
+    "englishName": "Al-Qamar",
+    "ayahsCount": 55,
+    "revelationType": "مكية",
+    "startJuz": 27,
+    "startPage": 528
+  },
+  {
+    "id": 55,
+    "name": "الرحمن",
+    "englishName": "Ar-Rahman",
+    "ayahsCount": 78,
+    "revelationType": "مدنية",
+    "startJuz": 27,
+    "startPage": 531
+  },
+  {
+    "id": 56,
+    "name": "الواقعة",
+    "englishName": "Al-Waqi'ah",
+    "ayahsCount": 96,
+    "revelationType": "مكية",
+    "startJuz": 27,
+    "startPage": 534
+  },
+  {
+    "id": 57,
+    "name": "الحديد",
+    "englishName": "Al-Hadid",
+    "ayahsCount": 29,
+    "revelationType": "مدنية",
+    "startJuz": 27,
+    "startPage": 537
+  },
+  {
+    "id": 58,
+    "name": "المجادلة",
+    "englishName": "Al-Mujadila",
+    "ayahsCount": 22,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 542
+  },
+  {
+    "id": 59,
+    "name": "الحشر",
+    "englishName": "Al-Hashr",
+    "ayahsCount": 24,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 545
+  },
+  {
+    "id": 60,
+    "name": "الممتحنة",
+    "englishName": "Al-Mumtahanah",
+    "ayahsCount": 13,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 549
+  },
+  {
+    "id": 61,
+    "name": "الصف",
+    "englishName": "As-Saff",
+    "ayahsCount": 14,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 551
+  },
+  {
+    "id": 62,
+    "name": "الجمعة",
+    "englishName": "Al-Jumu'ah",
+    "ayahsCount": 11,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 553
+  },
+  {
+    "id": 63,
+    "name": "المنافقون",
+    "englishName": "Al-Munafiqun",
+    "ayahsCount": 11,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 554
+  },
+  {
+    "id": 64,
+    "name": "التغابن",
+    "englishName": "At-Taghabun",
+    "ayahsCount": 18,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 556
+  },
+  {
+    "id": 65,
+    "name": "الطلاق",
+    "englishName": "At-Talaq",
+    "ayahsCount": 12,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 558
+  },
+  {
+    "id": 66,
+    "name": "التحريم",
+    "englishName": "At-Tahrim",
+    "ayahsCount": 12,
+    "revelationType": "مدنية",
+    "startJuz": 28,
+    "startPage": 560
+  },
+  {
+    "id": 67,
+    "name": "الملك",
+    "englishName": "Al-Mulk",
+    "ayahsCount": 30,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 562
+  },
+  {
+    "id": 68,
+    "name": "القلم",
+    "englishName": "Al-Qalam",
+    "ayahsCount": 52,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 564
+  },
+  {
+    "id": 69,
+    "name": "الحاقة",
+    "englishName": "Al-Haqqah",
+    "ayahsCount": 52,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 566
+  },
+  {
+    "id": 70,
+    "name": "المعارج",
+    "englishName": "Al-Ma'arij",
+    "ayahsCount": 44,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 568
+  },
+  {
+    "id": 71,
+    "name": "نوح",
+    "englishName": "Nuh",
+    "ayahsCount": 28,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 570
+  },
+  {
+    "id": 72,
+    "name": "الجن",
+    "englishName": "Al-Jinn",
+    "ayahsCount": 28,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 572
+  },
+  {
+    "id": 73,
+    "name": "المزمل",
+    "englishName": "Al-Muzzammil",
+    "ayahsCount": 20,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 574
+  },
+  {
+    "id": 74,
+    "name": "المدثر",
+    "englishName": "Al-Muddaththir",
+    "ayahsCount": 56,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 575
+  },
+  {
+    "id": 75,
+    "name": "القيامة",
+    "englishName": "Al-Qiyamah",
+    "ayahsCount": 40,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 577
+  },
+  {
+    "id": 76,
+    "name": "الإنسان",
+    "englishName": "Al-Insan",
+    "ayahsCount": 31,
+    "revelationType": "مدنية",
+    "startJuz": 29,
+    "startPage": 578
+  },
+  {
+    "id": 77,
+    "name": "المرسلات",
+    "englishName": "Al-Mursalat",
+    "ayahsCount": 50,
+    "revelationType": "مكية",
+    "startJuz": 29,
+    "startPage": 580
+  },
+  {
+    "id": 78,
+    "name": "النبأ",
+    "englishName": "An-Naba",
+    "ayahsCount": 40,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 582
+  },
+  {
+    "id": 79,
+    "name": "النازعات",
+    "englishName": "An-Nazi'at",
+    "ayahsCount": 46,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 583
+  },
+  {
+    "id": 80,
+    "name": "عبس",
+    "englishName": "Abasa",
+    "ayahsCount": 42,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 585
+  },
+  {
+    "id": 81,
+    "name": "التكوير",
+    "englishName": "At-Takwir",
+    "ayahsCount": 29,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 586
+  },
+  {
+    "id": 82,
+    "name": "الانفطار",
+    "englishName": "Al-Infitar",
+    "ayahsCount": 19,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 587
+  },
+  {
+    "id": 83,
+    "name": "المطففين",
+    "englishName": "Al-Mutaffifin",
+    "ayahsCount": 36,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 587
+  },
+  {
+    "id": 84,
+    "name": "الانشقاق",
+    "englishName": "Al-Inshiqaq",
+    "ayahsCount": 25,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 589
+  },
+  {
+    "id": 85,
+    "name": "البروج",
+    "englishName": "Al-Buruj",
+    "ayahsCount": 22,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 590
+  },
+  {
+    "id": 86,
+    "name": "الطارق",
+    "englishName": "At-Tariq",
+    "ayahsCount": 17,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 591
+  },
+  {
+    "id": 87,
+    "name": "الأعلى",
+    "englishName": "Al-A'la",
+    "ayahsCount": 19,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 591
+  },
+  {
+    "id": 88,
+    "name": "الغاشية",
+    "englishName": "Al-Ghashiyah",
+    "ayahsCount": 26,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 592
+  },
+  {
+    "id": 89,
+    "name": "الفجر",
+    "englishName": "Al-Fajr",
+    "ayahsCount": 30,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 593
+  },
+  {
+    "id": 90,
+    "name": "البلد",
+    "englishName": "Al-Balad",
+    "ayahsCount": 20,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 594
+  },
+  {
+    "id": 91,
+    "name": "الشمس",
+    "englishName": "Ash-Shams",
+    "ayahsCount": 15,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 595
+  },
+  {
+    "id": 92,
+    "name": "الليل",
+    "englishName": "Al-Layl",
+    "ayahsCount": 21,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 595
+  },
+  {
+    "id": 93,
+    "name": "الضحى",
+    "englishName": "Ad-Duha",
+    "ayahsCount": 11,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 596
+  },
+  {
+    "id": 94,
+    "name": "الشرح",
+    "englishName": "Ash-Sharh",
+    "ayahsCount": 8,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 596
+  },
+  {
+    "id": 95,
+    "name": "التين",
+    "englishName": "At-Tin",
+    "ayahsCount": 8,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 597
+  },
+  {
+    "id": 96,
+    "name": "العلق",
+    "englishName": "Al-Alaq",
+    "ayahsCount": 19,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 597
+  },
+  {
+    "id": 97,
+    "name": "القدر",
+    "englishName": "Al-Qadr",
+    "ayahsCount": 5,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 598
+  },
+  {
+    "id": 98,
+    "name": "البينة",
+    "englishName": "Al-Bayyinah",
+    "ayahsCount": 8,
+    "revelationType": "مدنية",
+    "startJuz": 30,
+    "startPage": 598
+  },
+  {
+    "id": 99,
+    "name": "الزلزلة",
+    "englishName": "Az-Zalzalah",
+    "ayahsCount": 8,
+    "revelationType": "مدنية",
+    "startJuz": 30,
+    "startPage": 599
+  },
+  {
+    "id": 100,
+    "name": "العاديات",
+    "englishName": "Al-Adiyat",
+    "ayahsCount": 11,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 599
+  },
+  {
+    "id": 101,
+    "name": "القارعة",
+    "englishName": "Al-Qari'ah",
+    "ayahsCount": 11,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 600
+  },
+  {
+    "id": 102,
+    "name": "التكاثر",
+    "englishName": "At-Takathur",
+    "ayahsCount": 8,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 600
+  },
+  {
+    "id": 103,
+    "name": "العصر",
+    "englishName": "Al-Asr",
+    "ayahsCount": 3,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 601
+  },
+  {
+    "id": 104,
+    "name": "الهمزة",
+    "englishName": "Al-Humazah",
+    "ayahsCount": 9,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 601
+  },
+  {
+    "id": 105,
+    "name": "الفيل",
+    "englishName": "Al-Fil",
+    "ayahsCount": 5,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 601
+  },
+  {
+    "id": 106,
+    "name": "قريش",
+    "englishName": "Quraysh",
+    "ayahsCount": 4,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 602
+  },
+  {
+    "id": 107,
+    "name": "الماعون",
+    "englishName": "Al-Ma'un",
+    "ayahsCount": 7,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 602
+  },
+  {
+    "id": 108,
+    "name": "الكوثر",
+    "englishName": "Al-Kawthar",
+    "ayahsCount": 3,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 602
+  },
+  {
+    "id": 109,
+    "name": "الكافرون",
+    "englishName": "Al-Kafirun",
+    "ayahsCount": 6,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 603
+  },
+  {
+    "id": 110,
+    "name": "النصر",
+    "englishName": "An-Nasr",
+    "ayahsCount": 3,
+    "revelationType": "مدنية",
+    "startJuz": 30,
+    "startPage": 603
+  },
+  {
+    "id": 111,
+    "name": "المسد",
+    "englishName": "Al-Masad",
+    "ayahsCount": 5,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 603
+  },
+  {
+    "id": 112,
+    "name": "الإخلاص",
+    "englishName": "Al-Ikhlas",
+    "ayahsCount": 4,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 604
+  },
+  {
+    "id": 113,
+    "name": "الفلق",
+    "englishName": "Al-Falaq",
+    "ayahsCount": 5,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 604
+  },
+  {
+    "id": 114,
+    "name": "الناس",
+    "englishName": "An-Nas",
+    "ayahsCount": 6,
+    "revelationType": "مكية",
+    "startJuz": 30,
+    "startPage": 604
+  }
+]

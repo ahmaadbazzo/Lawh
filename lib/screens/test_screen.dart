@@ -38,7 +38,11 @@ class _TestScreenState extends State<TestScreen> {
     if (currentAyah != null && _activeAyahText != currentAyah.text) {
       _activeAyahText = currentAyah.text;
       _textController.targetText = currentAyah.text;
-      _textController.clear();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted && _activeAyahText == currentAyah.text) {
+          _textController.clear();
+        }
+      });
     }
 
     // Handle completed session

@@ -17,6 +17,7 @@ class StorageService {
   static const String _keyMistakes = 'lawh_mistakes_list';
   static const String _keyWritingDraftPrefix = 'lawh_writing_page_';
   static const String _keyLastWritingPage = 'lawh_last_writing_page';
+  static const String _keyWritingOpacity = 'lawh_writing_verse_opacity';
 
   late SharedPreferences _prefs;
 
@@ -88,6 +89,12 @@ class StorageService {
 
   Future<void> saveLastWritingPage(int page) async {
     await _prefs.setInt(_keyLastWritingPage, page.clamp(1, 604));
+  }
+
+  double getWritingOpacity() => _prefs.getDouble(_keyWritingOpacity) ?? 0.30;
+
+  Future<void> saveWritingOpacity(double value) async {
+    await _prefs.setDouble(_keyWritingOpacity, value.clamp(0.08, 0.75));
   }
 
   String getWritingDraft(int page) =>

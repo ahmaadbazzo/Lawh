@@ -6,6 +6,7 @@ import 'package:qcf_quran_plus/qcf_quran_plus.dart';
 
 import '../constants/app_colors.dart';
 import '../services/mushaf_loader.dart';
+import '../services/quran_service.dart';
 import '../services/storage_service.dart';
 
 /// A distraction-free writing page. No memorization check or grading.
@@ -21,6 +22,7 @@ class MushafWritingScreen extends StatefulWidget {
 class _MushafWritingScreenState extends State<MushafWritingScreen> {
   late final PageController _pageController;
   int? _lastMushafPage;
+  int _selectedSurahId = 1;
   final TextEditingController _writingController = TextEditingController();
   final FocusNode _writingFocus = FocusNode();
   late int _page;
@@ -186,6 +188,40 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.menu_book_rounded, size: 17, color: AppColors.accentGold),
+                      const SizedBox(width: 7),
+                      const Text('السورة', style: TextStyle(fontSize: 12)),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Consumer<QuranService>(
+                          builder: (context, quran, _) => DropdownButtonHideUnderline(
+                            child: DropdownButton<int>(
+                              isExpanded: true,
+                              value: quran.surahs.any((s) => s.id == _selectedSurahId)
+                                  ? _selectedSurahId
+                                  : (quran.surahs.isNotEmpty ? quran.surahs.first.id : null),
+                              hint: const Text('اختر السورة'),
+                              items: quran.surahs.map((surah) => DropdownMenuItem<int>(
+                                value: surah.id,
+                                child: Text('${surah.name}  ·  ${surah.ayahsCount} آية',
+                                  overflow: TextOverflow.ellipsis),
+                              )).toList(),
+                              onChanged: (id) {
+                                if (id == null) return;
+                                final selected = quran.getSurah(id);
+                                if (selected == null) return;
+                                setState(() => _selectedSurahId = id);
+                                _goToPage(selected.startPage);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
@@ -244,6 +280,15 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                               enableTwoPageLayout: false,
                               deferNewPages: false,
                               pageBackgroundColor: paper,
+                              onPageChanged: (pageNumber) {
+                                if (pageNumber != _page) {
+                                  _page = pageNumber;
+                                  context.read<StorageService>().saveLastWritingPage(pageNumber);
+                                }
+                                // Load the selected page font on demand; nearby pages
+                                // are loaded only as the user navigates to them.
+                                MushafLoader.ensureReady(pageNumber);
+                              },
                             ),
                           ),
                         ),
@@ -271,6 +316,10 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                                     : const Color(0xFF14513B),
                               ),
                               decoration: InputDecoration(
+                                // ThemeData globally fills text fields. Disable it here:
+                                // this editor must be a transparent overlay over the Mushaf.
+                                filled: false,
+                                fillColor: Colors.transparent,
                                 border: InputBorder.none,
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
@@ -285,16 +334,26 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                             ),
                           ),
                         if (_loading)
-                          Container(
-                            color: paper.withOpacity(0.94),
-                            child: const Center(
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  CircularProgressIndicator(color: AppColors.accentGold),
-                                  SizedBox(height: 14),
-                                  Text('جارٍ تجهيز صفحات المصحف…'),
-                                ],
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: IgnorePointer(
+                              child: Container(
+                                margin: const EdgeInsets.all(12),
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                                decoration: BoxDecoration(
+                                  color: paper.withOpacity(0.78),
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(color: AppColors.accentGold.withOpacity(0.45)),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(width: 15, height: 15,
+                                      child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.accentGold)),
+                                    SizedBox(width: 9),
+                                    Text('جارٍ تحميل خط الصفحة…', style: TextStyle(fontSize: 12)),
+                                  ],
+                                ),
                               ),
                             ),
                           ),

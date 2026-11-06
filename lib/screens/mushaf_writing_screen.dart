@@ -134,15 +134,22 @@ class _MushafWritingScreenState extends State<MushafWritingScreen> {
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
-                        QuranPageView(
-                            pageController: _pageController,
-                            highlights: const <HighlightVerse>[],
-                            isDarkMode: isDark,
-                            isTajweed: false,
-                            enableTwoPageLayout: false,
-                            deferNewPages: false,
-                            pageBackgroundColor: paper,
+                        Opacity(
+                          // Fade only the Mushaf reference layer, not the
+                          // writing field or the whole page container.
+                          opacity: 0.30,
+                          child: IgnorePointer(
+                            child: QuranPageView(
+                              pageController: _pageController,
+                              highlights: const <HighlightVerse>[],
+                              isDarkMode: isDark,
+                              isTajweed: false,
+                              enableTwoPageLayout: false,
+                              deferNewPages: false,
+                              pageBackgroundColor: paper,
+                            ),
                           ),
+                        ),
                         if (!_loading && !_loadFailed)
                           Padding(
                             padding: const EdgeInsets.fromLTRB(18, 18, 18, 18),

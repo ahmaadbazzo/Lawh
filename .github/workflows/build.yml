@@ -72,6 +72,9 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
+      - name: Patch qcf_quran_plus runtime type inference
+        run: python3 scripts/patch_qcf_runtime_types.py
+
       - name: Generate launcher icons
         run: dart run flutter_launcher_icons
 

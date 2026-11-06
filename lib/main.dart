@@ -14,13 +14,41 @@ import 'services/storage_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Make framework build errors visible on-device instead of a blank route.
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.presentError(details);
+    debugPrint('LAW H FRAMEWORK ERROR: ${details.exceptionAsString()}');
+    debugPrintStack(stackTrace: details.stack);
+  };
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    final message = details.exceptionAsString();
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Material(
+        color: Colors.white,
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: SelectableText(
+              'Screen rendering error:\n\n$message',
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  };
+
   final storageService = StorageService();
   await storageService.init();
 
   final quranService = QuranService();
   await quranService.init();
 
-  // Load page-specific QCF fonts before the Mushaf screen can be opened.
   try {
     await QcfFontLoader.setupFontsAtStartup(
       onProgress: (progress) {
